@@ -14,13 +14,11 @@ public class CreateAccountHandler : ICommandHandler<CreateAccount>
 {
     private readonly IAggregateStore _aggregateStore;
     private readonly ISnapshotStore _snapshotStore;
-    private readonly EventSourcingDbContext _context;
 
-    public CreateAccountHandler(IAggregateStore aggregateStore,ISnapshotStore snapshotStore, EventSourcingDbContext context)
+    public CreateAccountHandler(IAggregateStore aggregateStore,ISnapshotStore snapshotStore)
     {
         _aggregateStore = aggregateStore;
         _snapshotStore = snapshotStore;
-        _context = context;
     }
 
     public async Task HandleAsync(CreateAccount command)
