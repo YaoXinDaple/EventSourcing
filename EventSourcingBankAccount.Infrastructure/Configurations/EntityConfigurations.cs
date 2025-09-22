@@ -96,28 +96,3 @@ public class SnapshotEntityConfiguration : IEntityTypeConfiguration<SnapshotEnti
             .HasDatabaseName("IX_Snapshots_Timestamp");
     }
 }
-
-public class BankAccountEntityConfiguration : IEntityTypeConfiguration<Domain.Aggregates.BankAccount>
-{
-    public void Configure(EntityTypeBuilder<Domain.Aggregates.BankAccount> builder)
-    {
-        builder.ToTable("BankAccounts");
-        builder.HasKey(b => b.Id);
-        
-        builder.Property(b => b.Id)
-            .ValueGeneratedNever()
-            .IsRequired()
-            .HasMaxLength(50)
-            .HasComment("账户ID");
-            
-        builder.Property(b => b.AccountHolder)
-            .IsRequired()
-            .HasMaxLength(100)
-            .HasComment("账户持有人姓名");
-            
-        builder.Property(b => b.Balance)
-            .IsRequired()
-            .HasPrecision(18, 2)
-            .HasComment("账户余额");
-    }
-}

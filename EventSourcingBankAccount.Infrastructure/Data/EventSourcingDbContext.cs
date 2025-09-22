@@ -41,15 +41,15 @@ public class EventSourcingDbContext : DbContext
 
     public DbSet<EventStoreEntity> Events { get; set; }
     public DbSet<SnapshotEntity> Snapshots { get; set; }
-    public DbSet<BankAccount> BankAccounts { get; set; }
+    // 删除对BankAccounts的DbSet
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // 应用实体配置
+        // 只应用事件和快照的配置
         modelBuilder.ApplyConfiguration(new EventStoreEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SnapshotEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new BankAccountEntityConfiguration());
+        // 删除BankAccountEntityConfiguration
     }
 }

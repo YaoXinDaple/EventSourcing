@@ -34,7 +34,6 @@ public class CreateAccountHandler : ICommandHandler<CreateAccount>
 
         // 创建新账户聚合
         var account = new BankAccount(command.AccountId, command.AccountHolder, command.InitialBalance);
-        await _context.BankAccounts.AddAsync(account);
         await _snapshotStore.SaveSnapshotAsync(account.CreateSnapshot());
 
         // 保存聚合
