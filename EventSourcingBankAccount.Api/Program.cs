@@ -39,6 +39,7 @@ builder.Services.AddDbContext<EventSourcingDbContext>(options =>
         options.UseSqlite(connectionString);
     }
 });
+builder.Services.AddDistributedMemoryCache();
 
 // 注册存储接口实现
 builder.Services.AddScoped<IEventStore, EventStore>();
@@ -92,7 +93,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.MapControllers();
 
 app.Run();

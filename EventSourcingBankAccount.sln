@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingBankAccount.Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingBankAccount.Infrastructure", "EventSourcingBankAccount.Infrastructure\EventSourcingBankAccount.Infrastructure.csproj", "{BCD14D57-89A0-4602-BE51-DAB22FAD3EC8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D69523F3-1C2A-4121-9F1B-0EE71AAD3B62}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{87B07191-6F6E-4412-9005-9F692FE26E95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +62,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A4E9DAD1-9403-4014-B1EA-1ACF15A490BE} = {D69523F3-1C2A-4121-9F1B-0EE71AAD3B62}
+		{63608B27-E7F1-425D-A388-DFAF2755861A} = {D69523F3-1C2A-4121-9F1B-0EE71AAD3B62}
+		{BCD14D57-89A0-4602-BE51-DAB22FAD3EC8} = {D69523F3-1C2A-4121-9F1B-0EE71AAD3B62}
 	EndGlobalSection
 EndGlobal
