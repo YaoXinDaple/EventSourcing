@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using EventSourcingBankAccount.Domain.Commands;
 using EventSourcingBankAccount.Domain.Core;
 using EventSourcingBankAccount.Domain.Interfaces;
+using EventSourcingBankAccount.Domain.Queries;
 using EventSourcingBankAccount.Infrastructure.Data;
+using EventSourcingBankAccount.Infrastructure.Handlers;
 using EventSourcingBankAccount.Infrastructure.Repositories;
-using EventSourcingBankAccount.Infrastructure.Services;
 
 namespace EventSourcingBankAccount.Infrastructure.Extensions;
 
@@ -21,17 +23,24 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services, 
         IConfiguration configuration)
     {
+        services.AddLogging();
+
         // 注册数据库上下文
         services.AddDbContext<EventSourcingDbContext>(options =>
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            if (string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrWhiteSpace(connectionString))
             {
-                // 使用 SQLite 作为默认数据库
+                // 未配置连接串时使用本地 SQLite，保持开发环境默认行为。
                 options.UseSqlite("Data Source=eventsourcing.db");
+            }
+            else if (IsSqlServerConnectionString(connectionString))
+            {
+                options.UseSqlServer(connectionString);
             }
             else
             {
+                // 判断规则：包含 Server=，或同时包含 Data Source= 与 Initial Catalog=，视为 SQL Server；其它连接串按 SQLite 处理。
                 options.UseSqlite(connectionString);
             }
         });
@@ -42,14 +51,29 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAggregateStore, AggregateStore>();
         
         // 注册快照策略
-        services.AddScoped<ISnapshotStrategy>(provider => 
+        services.AddSingleton<ISnapshotStrategy>(provider => 
             new EventCountSnapshotStrategy(eventThreshold: 10));
         
-        // 注册银行账户相关服务
-        services.AddScoped<IBankAccountRepository, BankAccountRepository>();
-        services.AddScoped<IBankAccountService, BankAccountService>();
+        // 注册命令处理器
+        services.AddScoped<ICommandHandler<CreateAccount>, CreateAccountHandler>();
+        services.AddScoped<ICommandHandler<DepositMoney>, DepositMoneyHandler>();
+        services.AddScoped<ICommandHandler<WithdrawMoney>, WithdrawMoneyHandler>();
+
+        // 注册查询处理器
+        services.AddScoped<IQueryHandler<GetAccountBalance, AccountBalanceResult>, GetAccountBalanceHandler>();
+        services.AddScoped<IQueryHandler<GetAccountStateAtTime, AccountStateResult>, GetAccountStateAtTimeHandler>();
 
         return services;
+    }
+
+    private static bool IsSqlServerConnectionString(string connectionString)
+    {
+        // 判断规则：包含 Server=，或同时包含 Data Source= 与 Initial Catalog=，视为 SQL Server。
+        var containsServer = connectionString.Contains("Server=", StringComparison.OrdinalIgnoreCase);
+        var containsDataSource = connectionString.Contains("Data Source=", StringComparison.OrdinalIgnoreCase);
+        var containsInitialCatalog = connectionString.Contains("Initial Catalog=", StringComparison.OrdinalIgnoreCase);
+
+        return containsServer || (containsDataSource && containsInitialCatalog);
     }
 
     /// <summary>
@@ -58,7 +82,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSnapshotStrategy<T>(this IServiceCollection services)
         where T : class, ISnapshotStrategy
     {
-        services.AddScoped<ISnapshotStrategy, T>();
+        services.AddSingleton<ISnapshotStrategy, T>();
         return services;
     }
 
@@ -67,10 +91,27 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddCompositeSnapshotStrategy(
         this IServiceCollection services,
-        params ISnapshotStrategy[] strategies)
+        params Type[] strategyTypes)
     {
-        services.AddScoped<ISnapshotStrategy>(provider => 
-            new CompositeSnapshotStrategy(strategies));
+        foreach (var strategyType in strategyTypes)
+        {
+            if (!typeof(ISnapshotStrategy).IsAssignableFrom(strategyType))
+            {
+                throw new ArgumentException(
+                    $"类型 {strategyType.Name} 必须实现 {nameof(ISnapshotStrategy)}",
+                    nameof(strategyTypes));
+            }
+
+            services.AddSingleton(strategyType);
+        }
+
+        services.AddSingleton<ISnapshotStrategy>(provider =>
+        {
+            var strategies = strategyTypes
+                .Select(strategyType => (ISnapshotStrategy)provider.GetRequiredService(strategyType))
+                .ToArray();
+            return new CompositeSnapshotStrategy(strategies);
+        });
         return services;
     }
 

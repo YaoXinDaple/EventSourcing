@@ -4,6 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
+.idea/
+.vs/
 *.rsuser
 *.suo
 *.user
@@ -17,6 +19,8 @@
 mono_crash.*
 
 # Build results
+bin/
+obj/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -262,6 +266,9 @@ ServiceFabricBackup/
 *.rptproj.bak
 
 # SQL Server files
+*.db
+*.db-shm
+*.db-wal
 *.mdf
 *.ldf
 *.ndf
