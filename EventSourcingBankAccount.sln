@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingBankAccount.Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingBankAccount.Infrastructure", "EventSourcingBankAccount.Infrastructure\EventSourcingBankAccount.Infrastructure.csproj", "{BCD14D57-89A0-4602-BE51-DAB22FAD3EC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingBankAccount.Tests", "EventSourcingBankAccount.Tests\EventSourcingBankAccount.Tests.csproj", "{FA6F4884-48A9-45BF-8C88-75684434AD6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{BCD14D57-89A0-4602-BE51-DAB22FAD3EC8}.Release|x64.Build.0 = Release|Any CPU
 		{BCD14D57-89A0-4602-BE51-DAB22FAD3EC8}.Release|x86.ActiveCfg = Release|Any CPU
 		{BCD14D57-89A0-4602-BE51-DAB22FAD3EC8}.Release|x86.Build.0 = Release|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Debug|x64.Build.0 = Debug|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Release|x64.ActiveCfg = Release|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Release|x64.Build.0 = Release|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA6F4884-48A9-45BF-8C88-75684434AD6D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
