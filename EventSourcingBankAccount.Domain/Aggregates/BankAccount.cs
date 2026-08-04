@@ -30,7 +30,8 @@ public class BankAccount : AggregateRoot
         
         if (initialBalance < 0)
             throw new ArgumentException("初始余额不能为负数", nameof(initialBalance));
-        
+
+        Id = accountId;
         var @event = new AccountCreated(accountId, accountHolder, initialBalance);
         AddEvent(@event);
         ApplyEvent(@event);

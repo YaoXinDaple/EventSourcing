@@ -1,5 +1,6 @@
 ﻿using EventSourcingBankAccount.Domain.Aggregates;
 using EventSourcingBankAccount.Domain.Commands;
+using EventSourcingBankAccount.Domain.Exceptions;
 using EventSourcingBankAccount.Domain.Interfaces;
 using EventSourcingBankAccount.Infrastructure.Data;
 using EventSourcingBankAccount.Infrastructure.Repositories;
@@ -13,12 +14,10 @@ namespace EventSourcingBankAccount.Infrastructure.Handlers;
 public class CreateAccountHandler : ICommandHandler<CreateAccount>
 {
     private readonly IAggregateStore _aggregateStore;
-    private readonly ISnapshotStore _snapshotStore;
 
-    public CreateAccountHandler(IAggregateStore aggregateStore,ISnapshotStore snapshotStore)
+    public CreateAccountHandler(IAggregateStore aggregateStore)
     {
         _aggregateStore = aggregateStore;
-        _snapshotStore = snapshotStore;
     }
 
     public async Task HandleAsync(CreateAccount command)
@@ -27,12 +26,11 @@ public class CreateAccountHandler : ICommandHandler<CreateAccount>
         var existingAccount = await _aggregateStore.GetByIdAsync<BankAccount>(command.AccountId);
         if (existingAccount != null)
         {
-            throw new InvalidOperationException($"账户 {command.AccountId} 已存在");
+            throw new AccountAlreadyExistsException(command.AccountId);
         }
 
         // 创建新账户聚合
         var account = new BankAccount(command.AccountId, command.AccountHolder, command.InitialBalance);
-        await _snapshotStore.SaveSnapshotAsync(account.CreateSnapshot());
 
         // 保存聚合
         await _aggregateStore.SaveAsync(account);

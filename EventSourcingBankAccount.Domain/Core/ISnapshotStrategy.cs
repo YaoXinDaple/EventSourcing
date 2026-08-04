@@ -5,8 +5,13 @@
 /// </summary>
 public interface ISnapshotStrategy
 {
-    bool ShouldCreateSnapshot(AggregateRoot aggregate);
+    bool ShouldCreateSnapshot(AggregateRoot aggregate, SnapshotMetadata? latestSnapshot);
 }
+
+/// <summary>
+/// 快照元信息
+/// </summary>
+public sealed record SnapshotMetadata(int Version, DateTime Timestamp);
 
 /// <summary>
 /// 基于事件数量的快照策略
@@ -17,12 +22,19 @@ public class EventCountSnapshotStrategy : ISnapshotStrategy
     
     public EventCountSnapshotStrategy(int eventThreshold = 10)
     {
+        if (eventThreshold <= 0)
+            throw new ArgumentOutOfRangeException(nameof(eventThreshold), "事件阈值必须大于 0");
+
         _eventThreshold = eventThreshold;
     }
     
-    public bool ShouldCreateSnapshot(AggregateRoot aggregate)
+    public bool ShouldCreateSnapshot(AggregateRoot aggregate, SnapshotMetadata? latestSnapshot)
     {
-        return aggregate.Version > 0 && aggregate.Version % _eventThreshold == 0;
+        if (aggregate.Version == 0) return false;
+
+        var latestSnapshotVersion = latestSnapshot?.Version ?? 0;
+        return aggregate.Version > latestSnapshotVersion
+            && aggregate.Version - latestSnapshotVersion >= _eventThreshold;
     }
 }
 
@@ -32,31 +44,20 @@ public class EventCountSnapshotStrategy : ISnapshotStrategy
 public class TimeIntervalSnapshotStrategy : ISnapshotStrategy
 {
     private readonly TimeSpan _interval;
-    private readonly Dictionary<string, DateTime> _lastSnapshotTimes = new();
     
     public TimeIntervalSnapshotStrategy(TimeSpan interval)
     {
+        if (interval <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(interval), "时间间隔必须大于 0");
+
         _interval = interval;
     }
     
-    public bool ShouldCreateSnapshot(AggregateRoot aggregate)
+    public bool ShouldCreateSnapshot(AggregateRoot aggregate, SnapshotMetadata? latestSnapshot)
     {
         if (aggregate.Version == 0) return false;
-        
-        var now = DateTime.UtcNow;
-        if (!_lastSnapshotTimes.ContainsKey(aggregate.Id))
-        {
-            _lastSnapshotTimes[aggregate.Id] = now;
-            return true;
-        }
-        
-        var shouldCreate = now - _lastSnapshotTimes[aggregate.Id] >= _interval;
-        if (shouldCreate)
-        {
-            _lastSnapshotTimes[aggregate.Id] = now;
-        }
-        
-        return shouldCreate;
+
+        return latestSnapshot == null || DateTime.UtcNow - latestSnapshot.Timestamp >= _interval;
     }
 }
 
@@ -72,8 +73,8 @@ public class CompositeSnapshotStrategy : ISnapshotStrategy
         _strategies = strategies.ToList();
     }
     
-    public bool ShouldCreateSnapshot(AggregateRoot aggregate)
+    public bool ShouldCreateSnapshot(AggregateRoot aggregate, SnapshotMetadata? latestSnapshot)
     {
-        return _strategies.Any(strategy => strategy.ShouldCreateSnapshot(aggregate));
+        return _strategies.Any(strategy => strategy.ShouldCreateSnapshot(aggregate, latestSnapshot));
     }
 }
