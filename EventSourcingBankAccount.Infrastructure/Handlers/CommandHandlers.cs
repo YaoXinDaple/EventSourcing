@@ -1,4 +1,4 @@
-using EventSourcingBankAccount.Domain.Aggregates;
+ï»¿using EventSourcingBankAccount.Domain.Aggregates;
 using EventSourcingBankAccount.Domain.Commands;
 using EventSourcingBankAccount.Domain.Interfaces;
 using EventSourcingBankAccount.Infrastructure.Data;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EventSourcingBankAccount.Infrastructure.Handlers;
 
 /// <summary>
-/// ´´½¨ÕË»§ÃüÁî´¦ÀíÆ÷
+/// åˆ›å»ºè´¦æˆ·å‘½ä»¤å¤„ç†å™¨
 /// </summary>
 public class CreateAccountHandler : ICommandHandler<CreateAccount>
 {
@@ -23,24 +23,24 @@ public class CreateAccountHandler : ICommandHandler<CreateAccount>
 
     public async Task HandleAsync(CreateAccount command)
     {
-        // ¼ì²éÕË»§ÊÇ·ñÒÑ´æÔÚ
+        // æ£€æŸ¥è´¦æˆ·æ˜¯å¦å·²å­˜åœ¨
         var existingAccount = await _aggregateStore.GetByIdAsync<BankAccount>(command.AccountId);
         if (existingAccount != null)
         {
-            throw new InvalidOperationException($"ÕË»§ {command.AccountId} ÒÑ´æÔÚ");
+            throw new InvalidOperationException($"è´¦æˆ· {command.AccountId} å·²å­˜åœ¨");
         }
 
-        // ´´½¨ĞÂÕË»§¾ÛºÏ
+        // åˆ›å»ºæ–°è´¦æˆ·èšåˆ
         var account = new BankAccount(command.AccountId, command.AccountHolder, command.InitialBalance);
         await _snapshotStore.SaveSnapshotAsync(account.CreateSnapshot());
 
-        // ±£´æ¾ÛºÏ
+        // ä¿å­˜èšåˆ
         await _aggregateStore.SaveAsync(account);
     }
 }
 
 /// <summary>
-/// ´æ¿îÃüÁî´¦ÀíÆ÷
+/// å­˜æ¬¾å‘½ä»¤å¤„ç†å™¨
 /// </summary>
 public class DepositMoneyHandler : ICommandHandler<DepositMoney>
 {
@@ -53,24 +53,24 @@ public class DepositMoneyHandler : ICommandHandler<DepositMoney>
 
     public async Task HandleAsync(DepositMoney command)
     {
-        // »ñÈ¡ÏÖÓĞµÄÒøĞĞÕË»§¾ÛºÏ
+        // è·å–ç°æœ‰çš„é“¶è¡Œè´¦æˆ·èšåˆ
         var account = await _aggregateStore.GetByIdAsync<BankAccount>(command.AccountId);
         if (account == null)
         {
-            // ÕË»§²»´æÔÚ£¬Å×³öÒì³£¶ø²»ÊÇ×Ô¶¯´´½¨ÕË»§
-            throw new InvalidOperationException($"ÕË»§ {command.AccountId} ²»´æÔÚ¡£ÇëÏÈ´´½¨ÕË»§¡£");
+            // è´¦æˆ·ä¸å­˜åœ¨ï¼ŒæŠ›å‡ºå¼‚å¸¸è€Œä¸æ˜¯è‡ªåŠ¨åˆ›å»ºè´¦æˆ·
+            throw new InvalidOperationException($"è´¦æˆ· {command.AccountId} ä¸å­˜åœ¨ã€‚è¯·å…ˆåˆ›å»ºè´¦æˆ·ã€‚");
         }
 
-        // Ö´ĞĞ´æ¿î²Ù×÷
+        // æ‰§è¡Œå­˜æ¬¾æ“ä½œ
         account.Deposit(command.Amount, command.Description);
 
-        // ±£´æ¾ÛºÏ
+        // ä¿å­˜èšåˆ
         await _aggregateStore.SaveAsync(account);
     }
 }
 
 /// <summary>
-/// È¡¿îÃüÁî´¦ÀíÆ÷
+/// å–æ¬¾å‘½ä»¤å¤„ç†å™¨
 /// </summary>
 public class WithdrawMoneyHandler : ICommandHandler<WithdrawMoney>
 {
@@ -83,17 +83,17 @@ public class WithdrawMoneyHandler : ICommandHandler<WithdrawMoney>
 
     public async Task HandleAsync(WithdrawMoney command)
     {
-        // »ñÈ¡ÏÖÓĞµÄÒøĞĞÕË»§¾ÛºÏ
+        // è·å–ç°æœ‰çš„é“¶è¡Œè´¦æˆ·èšåˆ
         var account = await _aggregateStore.GetByIdAsync<BankAccount>(command.AccountId);
         if (account == null)
         {
-            throw new InvalidOperationException($"ÕË»§ {command.AccountId} ²»´æÔÚ");
+            throw new InvalidOperationException($"è´¦æˆ· {command.AccountId} ä¸å­˜åœ¨");
         }
 
-        // Ö´ĞĞÈ¡¿î²Ù×÷
+        // æ‰§è¡Œå–æ¬¾æ“ä½œ
         account.Withdraw(command.Amount, command.Description);
 
-        // ±£´æ¾ÛºÏ
+        // ä¿å­˜èšåˆ
         await _aggregateStore.SaveAsync(account);
     }
 }

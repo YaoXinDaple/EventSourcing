@@ -1,11 +1,11 @@
-using EventSourcingBankAccount.Domain.Core;
+ï»¿using EventSourcingBankAccount.Domain.Core;
 using EventSourcingBankAccount.Domain.Events;
 using EventSourcingBankAccount.Domain.Exceptions;
 
 namespace EventSourcingBankAccount.Domain.Aggregates;
 
 /// <summary>
-/// ÒøĞĞÕË»§¾ÛºÏ¸ù
+/// é“¶è¡Œè´¦æˆ·èšåˆæ ¹
 /// </summary>
 public class BankAccount : AggregateRoot
 {
@@ -14,22 +14,22 @@ public class BankAccount : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime LastModifiedAt { get; private set; }
     
-    // ÎªĞòÁĞ»¯Æ÷ºÍ»ùÀàÌá¹©ÎŞ²Î¹¹Ôìº¯Êı
+    // ä¸ºåºåˆ—åŒ–å™¨å’ŒåŸºç±»æä¾›æ— å‚æ„é€ å‡½æ•°
     private BankAccount() { }
     
     /// <summary>
-    /// ´´½¨ĞÂµÄÒøĞĞÕË»§
+    /// åˆ›å»ºæ–°çš„é“¶è¡Œè´¦æˆ·
     /// </summary>
     public BankAccount(string accountId, string accountHolder, decimal initialBalance = 0)
     {
         if (string.IsNullOrWhiteSpace(accountId))
-            throw new ArgumentException("ÕË»§ID²»ÄÜÎª¿Õ", nameof(accountId));
+            throw new ArgumentException("è´¦æˆ·IDä¸èƒ½ä¸ºç©º", nameof(accountId));
         
         if (string.IsNullOrWhiteSpace(accountHolder))
-            throw new ArgumentException("ÕË»§³ÖÓĞÈË²»ÄÜÎª¿Õ", nameof(accountHolder));
+            throw new ArgumentException("è´¦æˆ·æŒæœ‰äººä¸èƒ½ä¸ºç©º", nameof(accountHolder));
         
         if (initialBalance < 0)
-            throw new ArgumentException("³õÊ¼Óà¶î²»ÄÜÎª¸ºÊı", nameof(initialBalance));
+            throw new ArgumentException("åˆå§‹ä½™é¢ä¸èƒ½ä¸ºè´Ÿæ•°", nameof(initialBalance));
         
         var @event = new AccountCreated(accountId, accountHolder, initialBalance);
         AddEvent(@event);
@@ -37,12 +37,12 @@ public class BankAccount : AggregateRoot
     }
     
     /// <summary>
-    /// ´æ¿î²Ù×÷
+    /// å­˜æ¬¾æ“ä½œ
     /// </summary>
     public void Deposit(decimal amount, string description = "")
     {
         if (amount <= 0)
-            throw new InvalidOperationException("´æ¿î½ğ¶î±ØĞë´óÓÚ0");
+            throw new InvalidOperationException("å­˜æ¬¾é‡‘é¢å¿…é¡»å¤§äº0");
         
         var newBalance = Balance + amount;
         var @event = new MoneyDeposited(Id, amount, newBalance, description);
@@ -51,15 +51,15 @@ public class BankAccount : AggregateRoot
     }
     
     /// <summary>
-    /// È¡¿î²Ù×÷
+    /// å–æ¬¾æ“ä½œ
     /// </summary>
     public void Withdraw(decimal amount, string description = "")
     {
         if (amount <= 0)
-            throw new InvalidOperationException("È¡¿î½ğ¶î±ØĞë´óÓÚ0");
+            throw new InvalidOperationException("å–æ¬¾é‡‘é¢å¿…é¡»å¤§äº0");
         
         if (Balance < amount)
-            throw new InsufficientFundsException($"Óà¶î²»×ã¡£µ±Ç°Óà¶î: {Balance}, ³¢ÊÔÈ¡¿î: {amount}");
+            throw new InsufficientFundsException($"ä½™é¢ä¸è¶³ã€‚å½“å‰ä½™é¢: {Balance}, å°è¯•å–æ¬¾: {amount}");
         
         var newBalance = Balance - amount;
         var @event = new MoneyWithdrawn(Id, amount, newBalance, description);
@@ -68,7 +68,7 @@ public class BankAccount : AggregateRoot
     }
     
     /// <summary>
-    /// ´´½¨¿ìÕÕ
+    /// åˆ›å»ºå¿«ç…§
     /// </summary>
     public BankAccountSnapshot CreateSnapshot()
     {
@@ -85,7 +85,7 @@ public class BankAccount : AggregateRoot
     }
     
     /// <summary>
-    /// ´Ó¿ìÕÕ¼ÓÔØ
+    /// ä»å¿«ç…§åŠ è½½
     /// </summary>
     public void LoadFromSnapshot(BankAccountSnapshot snapshot)
     {
@@ -136,7 +136,7 @@ public class BankAccount : AggregateRoot
 }
 
 /// <summary>
-/// ÒøĞĞÕË»§¿ìÕÕ
+/// é“¶è¡Œè´¦æˆ·å¿«ç…§
 /// </summary>
 public class BankAccountSnapshot : ISnapshot
 {

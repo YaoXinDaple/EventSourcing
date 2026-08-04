@@ -1,9 +1,9 @@
-using EventSourcingBankAccount.Domain.Core;
+ï»¿using EventSourcingBankAccount.Domain.Core;
 
 namespace EventSourcingBankAccount.Domain.Interfaces;
 
 /// <summary>
-/// ÃüÁî´¦ÀíÆ÷½Ó¿Ú
+/// å‘½ä»¤å¤„ç†å™¨æ¥å£
 /// </summary>
 public interface ICommandHandler<in TCommand> where TCommand : DomainCommand
 {
@@ -11,7 +11,7 @@ public interface ICommandHandler<in TCommand> where TCommand : DomainCommand
 }
 
 /// <summary>
-/// ÊÂ¼ş´¦ÀíÆ÷½Ó¿Ú
+/// äº‹ä»¶å¤„ç†å™¨æ¥å£
 /// </summary>
 public interface IEventHandler<in TEvent> where TEvent : DomainEvent
 {
@@ -19,7 +19,7 @@ public interface IEventHandler<in TEvent> where TEvent : DomainEvent
 }
 
 /// <summary>
-/// ²éÑ¯´¦ÀíÆ÷½Ó¿Ú
+/// æŸ¥è¯¢å¤„ç†å™¨æ¥å£
 /// </summary>
 public interface IQueryHandler<in TQuery, TResult> where TQuery : DomainCommand
 {

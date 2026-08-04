@@ -1,7 +1,7 @@
-namespace EventSourcingBankAccount.Domain.Core;
+ï»¿namespace EventSourcingBankAccount.Domain.Core;
 
 /// <summary>
-/// ¿ìÕÕ½Ó¿Ú
+/// å¿«ç…§æ¥å£
 /// </summary>
 public interface ISnapshot
 {

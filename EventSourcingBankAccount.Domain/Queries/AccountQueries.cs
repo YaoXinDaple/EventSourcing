@@ -1,9 +1,9 @@
-using EventSourcingBankAccount.Domain.Core;
+ï»¿using EventSourcingBankAccount.Domain.Core;
 
 namespace EventSourcingBankAccount.Domain.Queries;
 
 /// <summary>
-/// »ñÈ¡ÕË»§Óà¶î²éÑ¯
+/// è·å–è´¦æˆ·ä½™é¢æŸ¥è¯¢
 /// </summary>
 public class GetAccountBalance : DomainCommand
 {
@@ -14,12 +14,12 @@ public class GetAccountBalance : DomainCommand
         AccountId = accountId;
     }
     
-    // ÎªĞòÁĞ»¯Æ÷Ìá¹©ÎŞ²Î¹¹Ôìº¯Êı
+    // ä¸ºåºåˆ—åŒ–å™¨æä¾›æ— å‚æ„é€ å‡½æ•°
     protected GetAccountBalance() { }
 }
 
 /// <summary>
-/// »ñÈ¡ÕË»§ÀúÊ·×´Ì¬²éÑ¯
+/// è·å–è´¦æˆ·å†å²çŠ¶æ€æŸ¥è¯¢
 /// </summary>
 public class GetAccountStateAtTime : DomainCommand
 {
@@ -32,6 +32,6 @@ public class GetAccountStateAtTime : DomainCommand
         PointInTime = pointInTime;
     }
     
-    // ÎªĞòÁĞ»¯Æ÷Ìá¹©ÎŞ²Î¹¹Ôìº¯Êı
+    // ä¸ºåºåˆ—åŒ–å™¨æä¾›æ— å‚æ„é€ å‡½æ•°
     protected GetAccountStateAtTime() { }
 }

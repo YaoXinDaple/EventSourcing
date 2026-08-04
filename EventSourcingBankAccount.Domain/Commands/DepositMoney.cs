@@ -1,9 +1,9 @@
-using EventSourcingBankAccount.Domain.Core;
+ï»¿using EventSourcingBankAccount.Domain.Core;
 
 namespace EventSourcingBankAccount.Domain.Commands;
 
 /// <summary>
-/// ´æ¿îÃüÁî
+/// å­˜æ¬¾å‘½ä»¤
 /// </summary>
 public class DepositMoney : DomainCommand
 {
@@ -18,6 +18,6 @@ public class DepositMoney : DomainCommand
         Description = description;
     }
     
-    // ÎªĞòÁĞ»¯Æ÷Ìá¹©ÎŞ²Î¹¹Ôìº¯Êı
+    // ä¸ºåºåˆ—åŒ–å™¨æä¾›æ— å‚æ„é€ å‡½æ•°
     protected DepositMoney() { }
 }

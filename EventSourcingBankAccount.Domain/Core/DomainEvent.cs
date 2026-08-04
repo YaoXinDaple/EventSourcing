@@ -1,7 +1,7 @@
-namespace EventSourcingBankAccount.Domain.Core;
+锘縩amespace EventSourcingBankAccount.Domain.Core;
 
 /// <summary>
-/// 领域事件基类
+/// 棰嗗煙浜嬩欢鍩虹被
 /// </summary>
 public abstract class DomainEvent
 {

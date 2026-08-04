@@ -1,7 +1,7 @@
-namespace EventSourcingBankAccount.Domain.Core;
+ï»¿namespace EventSourcingBankAccount.Domain.Core;
 
 /// <summary>
-/// ¾ÛºÏ¸ù»ùÀà
+/// èšåˆæ ¹åŸºç±»
 /// </summary>
 public abstract class AggregateRoot
 {

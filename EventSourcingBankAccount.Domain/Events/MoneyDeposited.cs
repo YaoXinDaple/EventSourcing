@@ -1,9 +1,9 @@
-using EventSourcingBankAccount.Domain.Core;
+ï»¿using EventSourcingBankAccount.Domain.Core;
 
 namespace EventSourcingBankAccount.Domain.Events;
 
 /// <summary>
-/// ´æ¿îÍê³ÉÊÂ¼ş
+/// å­˜æ¬¾å®Œæˆäº‹ä»¶
 /// </summary>
 public class MoneyDeposited : DomainEvent
 {
@@ -20,6 +20,6 @@ public class MoneyDeposited : DomainEvent
         Description = description;
     }
     
-    // ÎªĞòÁĞ»¯Æ÷Ìá¹©ÎŞ²Î¹¹Ôìº¯Êı
+    // ä¸ºåºåˆ—åŒ–å™¨æä¾›æ— å‚æ„é€ å‡½æ•°
     protected MoneyDeposited() { }
 }

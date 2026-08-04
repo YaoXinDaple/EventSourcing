@@ -1,4 +1,4 @@
-using System.Text.Json;
+ï»¿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using EventSourcingBankAccount.Domain.Core;
 using EventSourcingBankAccount.Domain.Interfaces;
@@ -8,7 +8,7 @@ using EventSourcingBankAccount.Domain.Events;
 namespace EventSourcingBankAccount.Infrastructure.Repositories;
 
 /// <summary>
-/// ÊÂ¼þ´æ´¢ÊµÏÖ
+/// äº‹ä»¶å­˜å‚¨å®žçŽ°
 /// </summary>
 public class EventStore : IEventStore
 {
@@ -30,17 +30,17 @@ public class EventStore : IEventStore
         var eventsToSave = events.ToList();
         if (!eventsToSave.Any()) return;
 
-        // ¼ì²é²¢·¢³åÍ»
+        // æ£€æŸ¥å¹¶å‘å†²çª
         var lastVersion = await _context.Events
             .Where(e => e.AggregateId == aggregateId)
             .MaxAsync(e => (int?)e.Version) ?? 0;
 
         if (lastVersion != expectedVersion)
         {
-            throw new InvalidOperationException($"²¢·¢³åÍ»£ºÆÚÍû°æ±¾ {expectedVersion}£¬Êµ¼Ê°æ±¾ {lastVersion}");
+            throw new InvalidOperationException($"å¹¶å‘å†²çªï¼šæœŸæœ›ç‰ˆæœ¬ {expectedVersion}ï¼Œå®žé™…ç‰ˆæœ¬ {lastVersion}");
         }
 
-        // ±£´æÊÂ¼þ
+        // ä¿å­˜äº‹ä»¶
         var eventEntities = eventsToSave.Select(e => new EventStoreEntity
         {
             Id = e.EventId,
@@ -108,7 +108,7 @@ public class EventStore : IEventStore
         }
         catch (JsonException)
         {
-            return null; // »òÕß¼ÇÂ¼´íÎóÈÕÖ¾
+            return null; // æˆ–è€…è®°å½•é”™è¯¯æ—¥å¿—
         }
     }
 }

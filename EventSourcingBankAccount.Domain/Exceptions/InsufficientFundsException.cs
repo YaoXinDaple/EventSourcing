@@ -1,7 +1,7 @@
-namespace EventSourcingBankAccount.Domain.Exceptions;
+Ôªønamespace EventSourcingBankAccount.Domain.Exceptions;
 
 /// <summary>
-/// ”‡∂Ó≤ª◊„“Ï≥£
+/// ‰ΩôÈ¢ù‰∏çË∂≥ÂºÇÂ∏∏
 /// </summary>
 public class InsufficientFundsException : Exception
 {

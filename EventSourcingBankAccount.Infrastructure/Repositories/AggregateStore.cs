@@ -1,4 +1,4 @@
-using EventSourcingBankAccount.Domain.Aggregates;
+ï»¿using EventSourcingBankAccount.Domain.Aggregates;
 using EventSourcingBankAccount.Domain.Core;
 using EventSourcingBankAccount.Domain.Interfaces;
 using EventSourcingBankAccount.Infrastructure.Data;
@@ -8,7 +8,7 @@ using System.Reflection;
 namespace EventSourcingBankAccount.Infrastructure.Repositories;
 
 /// <summary>
-/// ¾ÛºÏ´æ´¢ÊµÏÖ
+/// èšåˆå­˜å‚¨å®ç°
 /// </summary>
 public class AggregateStore : IAggregateStore
 {
@@ -43,13 +43,13 @@ public class AggregateStore : IAggregateStore
         var uncommittedEvents = aggregate.GetUncommittedEvents();
         if (!uncommittedEvents.Any()) return;
 
-        // ±£´æÊÂ¼ş
+        // ä¿å­˜äº‹ä»¶
         await _eventStore.SaveEventsAsync(aggregate.Id, uncommittedEvents, aggregate.Version);
         
-        // ±ê¼ÇÊÂ¼şÒÑÌá½»
+        // æ ‡è®°äº‹ä»¶å·²æäº¤
         aggregate.MarkEventsAsCommitted();
 
-        // ¼ì²éÊÇ·ñĞèÒª´´½¨¿ìÕÕ
+        // æ£€æŸ¥æ˜¯å¦éœ€è¦åˆ›å»ºå¿«ç…§
         if (_snapshotStrategy.ShouldCreateSnapshot(aggregate) && aggregate is BankAccount bankAccount)
         {
             var snapshot = bankAccount.CreateSnapshot();
@@ -62,16 +62,16 @@ public class AggregateStore : IAggregateStore
         if (string.IsNullOrWhiteSpace(id))
             return null;
 
-        // Ä¿Ç°Ö»Ö§³ÖBankAccountÀàĞÍ
+        // ç›®å‰åªæ”¯æŒBankAccountç±»å‹
         if (typeof(T) != typeof(BankAccount))
         {
-            throw new NotSupportedException($"¾ÛºÏÀàĞÍ {typeof(T).Name} ÉĞÎ´Ö§³Ö");
+            throw new NotSupportedException($"èšåˆç±»å‹ {typeof(T).Name} å°šæœªæ”¯æŒ");
         }
 
-        // Ê¹ÓÃ·´Éä´´½¨Ò»¸ö¿ÕµÄ BankAccount ÊµÀı
+        // ä½¿ç”¨åå°„åˆ›å»ºä¸€ä¸ªç©ºçš„ BankAccount å®ä¾‹
         var bankAccount = CreateEmptyBankAccount();
         
-        // ³¢ÊÔ´Ó¿ìÕÕ¼ÓÔØ
+        // å°è¯•ä»å¿«ç…§åŠ è½½
         BankAccountSnapshot? snapshot = null;
         if (pointInTime.HasValue)
         {
@@ -87,14 +87,14 @@ public class AggregateStore : IAggregateStore
             bankAccount.LoadFromSnapshot(snapshot);
         }
 
-        // ¼ÓÔØ¿ìÕÕÖ®ºóµÄÊÂ¼ş£¨»òÈç¹ûÃ»ÓĞ¿ìÕÕ£¬Ôò¼ÓÔØËùÓĞÊÂ¼ş£©
+        // åŠ è½½å¿«ç…§ä¹‹åçš„äº‹ä»¶ï¼ˆæˆ–å¦‚æœæ²¡æœ‰å¿«ç…§ï¼Œåˆ™åŠ è½½æ‰€æœ‰äº‹ä»¶ï¼‰
         IEnumerable<DomainEvent> events;
         if (pointInTime.HasValue)
         {
             events = await _eventStore.GetEventsAsync(id, pointInTime.Value);
             if (snapshot != null)
             {
-                // Ö»¼ÓÔØ¿ìÕÕ°æ±¾Ö®ºóµÄÊÂ¼ş
+                // åªåŠ è½½å¿«ç…§ç‰ˆæœ¬ä¹‹åçš„äº‹ä»¶
                 events = events.Where(e => e.Version > snapshot.Version);
             }
         }
@@ -110,7 +110,7 @@ public class AggregateStore : IAggregateStore
             bankAccount.LoadFromHistory(events);
         }
 
-        // Èç¹û¼ÈÃ»ÓĞ¿ìÕÕÒ²Ã»ÓĞÊÂ¼ş£¬ËµÃ÷¾ÛºÏ²»´æÔÚ
+        // å¦‚æœæ—¢æ²¡æœ‰å¿«ç…§ä¹Ÿæ²¡æœ‰äº‹ä»¶ï¼Œè¯´æ˜èšåˆä¸å­˜åœ¨
         if (snapshot == null && !events.Any())
         {
             return null;
@@ -121,7 +121,7 @@ public class AggregateStore : IAggregateStore
 
     private static BankAccount CreateEmptyBankAccount()
     {
-        // Ê¹ÓÃ·´Éä´´½¨Ò»¸ö¿ÕµÄ BankAccount ÊµÀı£¬ÈÆ¹ı¹¹Ôìº¯Êı
+        // ä½¿ç”¨åå°„åˆ›å»ºä¸€ä¸ªç©ºçš„ BankAccount å®ä¾‹ï¼Œç»•è¿‡æ„é€ å‡½æ•°
         return (BankAccount)Activator.CreateInstance(typeof(BankAccount), nonPublic: true)!;
     }
 }

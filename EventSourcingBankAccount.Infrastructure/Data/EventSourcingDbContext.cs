@@ -1,11 +1,11 @@
-using Microsoft.EntityFrameworkCore;
+ï»¿using Microsoft.EntityFrameworkCore;
 using EventSourcingBankAccount.Infrastructure.Configurations;
 using EventSourcingBankAccount.Domain.Aggregates;
 
 namespace EventSourcingBankAccount.Infrastructure.Data;
 
 /// <summary>
-/// ÊÂ¼ş´æ´¢Êı¾İÄ£ĞÍ
+/// äº‹ä»¶å­˜å‚¨æ•°æ®æ¨¡å‹
 /// </summary>
 public class EventStoreEntity
 {
@@ -18,7 +18,7 @@ public class EventStoreEntity
 }
 
 /// <summary>
-/// ¿ìÕÕ´æ´¢Êı¾İÄ£ĞÍ
+/// å¿«ç…§å­˜å‚¨æ•°æ®æ¨¡å‹
 /// </summary>
 public class SnapshotEntity
 {
@@ -31,7 +31,7 @@ public class SnapshotEntity
 }
 
 /// <summary>
-/// ÊÂ¼şËİÔ´Êı¾İ¿âÉÏÏÂÎÄ
+/// äº‹ä»¶æº¯æºæ•°æ®åº“ä¸Šä¸‹æ–‡
 /// </summary>
 public class EventSourcingDbContext : DbContext
 {
@@ -41,15 +41,15 @@ public class EventSourcingDbContext : DbContext
 
     public DbSet<EventStoreEntity> Events { get; set; }
     public DbSet<SnapshotEntity> Snapshots { get; set; }
-    // É¾³ı¶ÔBankAccountsµÄDbSet
+    // åˆ é™¤å¯¹BankAccountsçš„DbSet
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Ö»Ó¦ÓÃÊÂ¼şºÍ¿ìÕÕµÄÅäÖÃ
+        // åªåº”ç”¨äº‹ä»¶å’Œå¿«ç…§çš„é…ç½®
         modelBuilder.ApplyConfiguration(new EventStoreEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SnapshotEntityConfiguration());
-        // É¾³ıBankAccountEntityConfiguration
+        // åˆ é™¤BankAccountEntityConfiguration
     }
 }

@@ -1,4 +1,4 @@
-using System.Text.Json;
+ï»¿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using EventSourcingBankAccount.Domain.Core;
 using EventSourcingBankAccount.Domain.Interfaces;
@@ -8,7 +8,7 @@ using EventSourcingBankAccount.Domain.Aggregates;
 namespace EventSourcingBankAccount.Infrastructure.Repositories;
 
 /// <summary>
-/// ¿ìÕÕ´æ´¢ÊµÏÖ
+/// å¿«ç…§å­˜å‚¨å®žçŽ°
 /// </summary>
 public class SnapshotStore : ISnapshotStore
 {
@@ -75,7 +75,7 @@ public class SnapshotStore : ISnapshotStore
         }
         catch (JsonException)
         {
-            return null; // »òÕß¼ÇÂ¼´íÎóÈÕÖ¾
+            return null; // æˆ–è€…è®°å½•é”™è¯¯æ—¥å¿—
         }
     }
 }

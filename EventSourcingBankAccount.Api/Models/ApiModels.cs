@@ -1,7 +1,7 @@
-namespace EventSourcingBankAccount.Api.Models;
+ï»¿namespace EventSourcingBankAccount.Api.Models;
 
 /// <summary>
-/// ´´½¨ÕË»§ÇëÇó
+/// åˆ›å»ºè´¦æˆ·è¯·æ±‚
 /// </summary>
 public class CreateAccountRequest
 {
@@ -11,7 +11,7 @@ public class CreateAccountRequest
 }
 
 /// <summary>
-/// ´æ¿îÇëÇó
+/// å­˜æ¬¾è¯·æ±‚
 /// </summary>
 public class DepositRequest
 {
@@ -20,7 +20,7 @@ public class DepositRequest
 }
 
 /// <summary>
-/// È¡¿îÇëÇó
+/// å–æ¬¾è¯·æ±‚
 /// </summary>
 public class WithdrawRequest
 {
@@ -29,7 +29,7 @@ public class WithdrawRequest
 }
 
 /// <summary>
-/// »ØËİ×´Ì¬ÇëÇó
+/// å›æº¯çŠ¶æ€è¯·æ±‚
 /// </summary>
 public class GetStateAtTimeRequest
 {
@@ -37,7 +37,7 @@ public class GetStateAtTimeRequest
 }
 
 /// <summary>
-/// API ÏìÓ¦»ùÀà
+/// API å“åº”åŸºç±»
 /// </summary>
 public class ApiResponse<T>
 {
@@ -45,7 +45,7 @@ public class ApiResponse<T>
     public string Message { get; set; } = string.Empty;
     public T? Data { get; set; }
     
-    public static ApiResponse<T> Ok(T data, string message = "²Ù×÷³É¹¦")
+    public static ApiResponse<T> Ok(T data, string message = "æ“ä½œæˆåŠŸ")
     {
         return new ApiResponse<T>
         {

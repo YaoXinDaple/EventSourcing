@@ -1,9 +1,9 @@
-using EventSourcingBankAccount.Domain.Core;
+锘縰sing EventSourcingBankAccount.Domain.Core;
 
 namespace EventSourcingBankAccount.Domain.Interfaces;
 
 /// <summary>
-/// 事件存储接口
+/// 浜嬩欢瀛樺偍鎺ュ彛
 /// </summary>
 public interface IEventStore
 {
@@ -15,7 +15,7 @@ public interface IEventStore
 }
 
 /// <summary>
-/// 快照存储接口
+/// 蹇収瀛樺偍鎺ュ彛
 /// </summary>
 public interface ISnapshotStore
 {
@@ -25,7 +25,7 @@ public interface ISnapshotStore
 }
 
 /// <summary>
-/// 聚合存储接口
+/// 鑱氬悎瀛樺偍鎺ュ彛
 /// </summary>
 public interface IAggregateStore
 {

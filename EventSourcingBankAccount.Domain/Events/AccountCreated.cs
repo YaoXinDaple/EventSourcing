@@ -1,9 +1,9 @@
-using EventSourcingBankAccount.Domain.Core;
+ï»¿using EventSourcingBankAccount.Domain.Core;
 
 namespace EventSourcingBankAccount.Domain.Events;
 
 /// <summary>
-/// ÕË»§´´½¨ÊÂ¼ş
+/// è´¦æˆ·åˆ›å»ºäº‹ä»¶
 /// </summary>
 public class AccountCreated : DomainEvent
 {
@@ -18,6 +18,6 @@ public class AccountCreated : DomainEvent
         InitialBalance = initialBalance;
     }
     
-    // ÎªĞòÁĞ»¯Æ÷Ìá¹©ÎŞ²Î¹¹Ôìº¯Êı
+    // ä¸ºåºåˆ—åŒ–å™¨æä¾›æ— å‚æ„é€ å‡½æ•°
     protected AccountCreated() { }
 }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using EventSourcingBankAccount.Api.Models;
 using EventSourcingBankAccount.Domain.Commands;
 using EventSourcingBankAccount.Domain.Queries;
@@ -37,7 +37,7 @@ public class BankAccountController : ControllerBase
     }
 
     /// <summary>
-    /// ´´½¨ÒøĞĞÕË»§
+    /// åˆ›å»ºé“¶è¡Œè´¦æˆ·
     /// </summary>
     [HttpPost]
     public async Task<ActionResult<ApiResponse<object>>> CreateAccount([FromBody] CreateAccountRequest request)
@@ -46,41 +46,41 @@ public class BankAccountController : ControllerBase
         {
             if (string.IsNullOrWhiteSpace(request.AccountId))
             {
-                return BadRequest(ApiResponse<object>.Error("ÕË»§ID²»ÄÜÎª¿Õ"));
+                return BadRequest(ApiResponse<object>.Error("è´¦æˆ·IDä¸èƒ½ä¸ºç©º"));
             }
 
             if (string.IsNullOrWhiteSpace(request.AccountHolder))
             {
-                return BadRequest(ApiResponse<object>.Error("ÕË»§³ÖÓĞÈË²»ÄÜÎª¿Õ"));
+                return BadRequest(ApiResponse<object>.Error("è´¦æˆ·æŒæœ‰äººä¸èƒ½ä¸ºç©º"));
             }
 
             if (request.InitialBalance < 0)
             {
-                return BadRequest(ApiResponse<object>.Error("³õÊ¼Óà¶î²»ÄÜÎª¸ºÊı"));
+                return BadRequest(ApiResponse<object>.Error("åˆå§‹ä½™é¢ä¸èƒ½ä¸ºè´Ÿæ•°"));
             }
 
-            // Ê¹ÓÃÃüÁî´¦ÀíÆ÷´´½¨ÕË»§
+            // ä½¿ç”¨å‘½ä»¤å¤„ç†å™¨åˆ›å»ºè´¦æˆ·
             var command = new CreateAccount(request.AccountId, request.AccountHolder, request.InitialBalance);
             await _createAccountHandler.HandleAsync(command);
 
-            _logger.LogInformation("ÕË»§´´½¨³É¹¦: {AccountId}", request.AccountId);
+            _logger.LogInformation("è´¦æˆ·åˆ›å»ºæˆåŠŸ: {AccountId}", request.AccountId);
 
-            return Ok(ApiResponse<object>.Ok(new { AccountId = request.AccountId }, "ÕË»§´´½¨³É¹¦"));
+            return Ok(ApiResponse<object>.Ok(new { AccountId = request.AccountId }, "è´¦æˆ·åˆ›å»ºæˆåŠŸ"));
         }
-        catch (InvalidOperationException ex) when (ex.Message.Contains("ÒÑ´æÔÚ"))
+        catch (InvalidOperationException ex) when (ex.Message.Contains("å·²å­˜åœ¨"))
         {
-            _logger.LogWarning("³¢ÊÔ´´½¨ÒÑ´æÔÚµÄÕË»§: {AccountId}", request.AccountId);
+            _logger.LogWarning("å°è¯•åˆ›å»ºå·²å­˜åœ¨çš„è´¦æˆ·: {AccountId}", request.AccountId);
             return Conflict(ApiResponse<object>.Error(ex.Message));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "´´½¨ÕË»§Ê±·¢Éú´íÎó: {AccountId}", request.AccountId);
-            return StatusCode(500, ApiResponse<object>.Error($"´´½¨ÕË»§Ê§°Ü: {ex.Message}"));
+            _logger.LogError(ex, "åˆ›å»ºè´¦æˆ·æ—¶å‘ç”Ÿé”™è¯¯: {AccountId}", request.AccountId);
+            return StatusCode(500, ApiResponse<object>.Error($"åˆ›å»ºè´¦æˆ·å¤±è´¥: {ex.Message}"));
         }
     }
 
     /// <summary>
-    /// ´æ¿î²Ù×÷
+    /// å­˜æ¬¾æ“ä½œ
     /// </summary>
     [HttpPost("{accountId}/deposit")]
     public async Task<ActionResult<ApiResponse<object>>> Deposit(string accountId, [FromBody] DepositRequest request)
@@ -89,30 +89,30 @@ public class BankAccountController : ControllerBase
         {
             if (request.Amount <= 0)
             {
-                return BadRequest(ApiResponse<object>.Error("´æ¿î½ğ¶î±ØĞë´óÓÚ0"));
+                return BadRequest(ApiResponse<object>.Error("å­˜æ¬¾é‡‘é¢å¿…é¡»å¤§äº0"));
             }
 
             var command = new DepositMoney(accountId, request.Amount, request.Description);
             await _depositHandler.HandleAsync(command);
 
-            _logger.LogInformation("´æ¿î³É¹¦: ÕË»§ {AccountId}, ½ğ¶î {Amount}", accountId, request.Amount);
+            _logger.LogInformation("å­˜æ¬¾æˆåŠŸ: è´¦æˆ· {AccountId}, é‡‘é¢ {Amount}", accountId, request.Amount);
 
-            return Ok(ApiResponse<object>.Ok(new { AccountId = accountId, Amount = request.Amount }, "´æ¿î³É¹¦"));
+            return Ok(ApiResponse<object>.Ok(new { AccountId = accountId, Amount = request.Amount }, "å­˜æ¬¾æˆåŠŸ"));
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "´æ¿î²Ù×÷Ê§°Ü: ÕË»§ {AccountId}", accountId);
+            _logger.LogWarning(ex, "å­˜æ¬¾æ“ä½œå¤±è´¥: è´¦æˆ· {AccountId}", accountId);
             return BadRequest(ApiResponse<object>.Error(ex.Message));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "´æ¿îÊ±·¢Éú´íÎó: ÕË»§ {AccountId}", accountId);
-            return StatusCode(500, ApiResponse<object>.Error($"´æ¿îÊ§°Ü: {ex.Message}"));
+            _logger.LogError(ex, "å­˜æ¬¾æ—¶å‘ç”Ÿé”™è¯¯: è´¦æˆ· {AccountId}", accountId);
+            return StatusCode(500, ApiResponse<object>.Error($"å­˜æ¬¾å¤±è´¥: {ex.Message}"));
         }
     }
 
     /// <summary>
-    /// È¡¿î²Ù×÷
+    /// å–æ¬¾æ“ä½œ
     /// </summary>
     [HttpPost("{accountId}/withdraw")]
     public async Task<ActionResult<ApiResponse<object>>> Withdraw(string accountId, [FromBody] WithdrawRequest request)
@@ -121,35 +121,35 @@ public class BankAccountController : ControllerBase
         {
             if (request.Amount <= 0)
             {
-                return BadRequest(ApiResponse<object>.Error("È¡¿î½ğ¶î±ØĞë´óÓÚ0"));
+                return BadRequest(ApiResponse<object>.Error("å–æ¬¾é‡‘é¢å¿…é¡»å¤§äº0"));
             }
 
             var command = new WithdrawMoney(accountId, request.Amount, request.Description);
             await _withdrawHandler.HandleAsync(command);
 
-            _logger.LogInformation("È¡¿î³É¹¦: ÕË»§ {AccountId}, ½ğ¶î {Amount}", accountId, request.Amount);
+            _logger.LogInformation("å–æ¬¾æˆåŠŸ: è´¦æˆ· {AccountId}, é‡‘é¢ {Amount}", accountId, request.Amount);
 
-            return Ok(ApiResponse<object>.Ok(new { AccountId = accountId, Amount = request.Amount }, "È¡¿î³É¹¦"));
+            return Ok(ApiResponse<object>.Ok(new { AccountId = accountId, Amount = request.Amount }, "å–æ¬¾æˆåŠŸ"));
         }
         catch (InsufficientFundsException ex)
         {
-            _logger.LogWarning(ex, "È¡¿îÊ§°Ü - Óà¶î²»×ã: ÕË»§ {AccountId}", accountId);
+            _logger.LogWarning(ex, "å–æ¬¾å¤±è´¥ - ä½™é¢ä¸è¶³: è´¦æˆ· {AccountId}", accountId);
             return BadRequest(ApiResponse<object>.Error(ex.Message));
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "È¡¿î²Ù×÷Ê§°Ü: ÕË»§ {AccountId}", accountId);
+            _logger.LogWarning(ex, "å–æ¬¾æ“ä½œå¤±è´¥: è´¦æˆ· {AccountId}", accountId);
             return BadRequest(ApiResponse<object>.Error(ex.Message));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "È¡¿îÊ±·¢Éú´íÎó: ÕË»§ {AccountId}", accountId);
-            return StatusCode(500, ApiResponse<object>.Error($"È¡¿îÊ§°Ü: {ex.Message}"));
+            _logger.LogError(ex, "å–æ¬¾æ—¶å‘ç”Ÿé”™è¯¯: è´¦æˆ· {AccountId}", accountId);
+            return StatusCode(500, ApiResponse<object>.Error($"å–æ¬¾å¤±è´¥: {ex.Message}"));
         }
     }
 
     /// <summary>
-    /// ²éÑ¯ÕË»§Óà¶î
+    /// æŸ¥è¯¢è´¦æˆ·ä½™é¢
     /// </summary>
     [HttpGet("{accountId}/balance")]
     public async Task<ActionResult<ApiResponse<AccountBalanceResult>>> GetBalance(string accountId)
@@ -159,22 +159,22 @@ public class BankAccountController : ControllerBase
             var query = new GetAccountBalance(accountId);
             var result = await _balanceQueryHandler.HandleAsync(query);
 
-            return Ok(ApiResponse<AccountBalanceResult>.Ok(result, "²éÑ¯³É¹¦"));
+            return Ok(ApiResponse<AccountBalanceResult>.Ok(result, "æŸ¥è¯¢æˆåŠŸ"));
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "ÕË»§Óà¶î²éÑ¯Ê§°Ü: {AccountId}", accountId);
+            _logger.LogWarning(ex, "è´¦æˆ·ä½™é¢æŸ¥è¯¢å¤±è´¥: {AccountId}", accountId);
             return NotFound(ApiResponse<AccountBalanceResult>.Error(ex.Message));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "²éÑ¯ÕË»§Óà¶îÊ±·¢Éú´íÎó: {AccountId}", accountId);
-            return StatusCode(500, ApiResponse<AccountBalanceResult>.Error($"²éÑ¯Ê§°Ü: {ex.Message}"));
+            _logger.LogError(ex, "æŸ¥è¯¢è´¦æˆ·ä½™é¢æ—¶å‘ç”Ÿé”™è¯¯: {AccountId}", accountId);
+            return StatusCode(500, ApiResponse<AccountBalanceResult>.Error($"æŸ¥è¯¢å¤±è´¥: {ex.Message}"));
         }
     }
 
     /// <summary>
-    /// »ØËİÕË»§×´Ì¬µ½Ö¸¶¨Ê±¼äµã
+    /// å›æº¯è´¦æˆ·çŠ¶æ€åˆ°æŒ‡å®šæ—¶é—´ç‚¹
     /// </summary>
     [HttpGet("{accountId}/state")]
     public async Task<ActionResult<ApiResponse<AccountStateResult>>> GetStateAtTime(
@@ -185,23 +185,23 @@ public class BankAccountController : ControllerBase
         {
             if (pointInTime == default)
             {
-                return BadRequest(ApiResponse<AccountStateResult>.Error("±ØĞëÖ¸¶¨Ê±¼äµã"));
+                return BadRequest(ApiResponse<AccountStateResult>.Error("å¿…é¡»æŒ‡å®šæ—¶é—´ç‚¹"));
             }
 
             var query = new GetAccountStateAtTime(accountId, pointInTime);
             var result = await _stateQueryHandler.HandleAsync(query);
 
-            return Ok(ApiResponse<AccountStateResult>.Ok(result, "×´Ì¬»ØËİ³É¹¦"));
+            return Ok(ApiResponse<AccountStateResult>.Ok(result, "çŠ¶æ€å›æº¯æˆåŠŸ"));
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "ÕË»§×´Ì¬»ØËİÊ§°Ü: {AccountId}, Ê±¼äµã: {PointInTime}", accountId, pointInTime);
+            _logger.LogWarning(ex, "è´¦æˆ·çŠ¶æ€å›æº¯å¤±è´¥: {AccountId}, æ—¶é—´ç‚¹: {PointInTime}", accountId, pointInTime);
             return NotFound(ApiResponse<AccountStateResult>.Error(ex.Message));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "×´Ì¬»ØËİÊ±·¢Éú´íÎó: {AccountId}, Ê±¼äµã: {PointInTime}", accountId, pointInTime);
-            return StatusCode(500, ApiResponse<AccountStateResult>.Error($"×´Ì¬»ØËİÊ§°Ü: {ex.Message}"));
+            _logger.LogError(ex, "çŠ¶æ€å›æº¯æ—¶å‘ç”Ÿé”™è¯¯: {AccountId}, æ—¶é—´ç‚¹: {PointInTime}", accountId, pointInTime);
+            return StatusCode(500, ApiResponse<AccountStateResult>.Error($"çŠ¶æ€å›æº¯å¤±è´¥: {ex.Message}"));
         }
     }
 }

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+ï»¿using Microsoft.EntityFrameworkCore;
 using EventSourcingBankAccount.Infrastructure.Data;
 using EventSourcingBankAccount.Domain.Interfaces;
 using EventSourcingBankAccount.Infrastructure.Repositories;
@@ -18,51 +18,51 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-// ÅäÖÃÊı¾İ¿âÁ¬½Ó - Ê¹ÓÃSQLite±ãÓÚ¿ª·¢ºÍ²âÊÔ
+// é…ç½®æ•°æ®åº“è¿æ¥ - ä½¿ç”¨SQLiteä¾¿äºå¼€å‘å’Œæµ‹è¯•
 builder.Services.AddDbContext<EventSourcingDbContext>(options =>
 {
-    // ¿ÉÒÔ´ÓÅäÖÃÎÄ¼şÖĞ¶ÁÈ¡Á¬½Ó×Ö·û´®£¬µ«ÕâÀï¼ò»¯Ê¹ÓÃSQLite
+    // å¯ä»¥ä»é…ç½®æ–‡ä»¶ä¸­è¯»å–è¿æ¥å­—ç¬¦ä¸²ï¼Œä½†è¿™é‡Œç®€åŒ–ä½¿ç”¨SQLite
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     if (string.IsNullOrEmpty(connectionString))
     {
-        // Èç¹ûÅäÖÃÎÄ¼şÖĞÃ»ÓĞÁ¬½Ó×Ö·û´®£¬Ê¹ÓÃÄ¬ÈÏSQLite
+        // å¦‚æœé…ç½®æ–‡ä»¶ä¸­æ²¡æœ‰è¿æ¥å­—ç¬¦ä¸²ï¼Œä½¿ç”¨é»˜è®¤SQLite
         options.UseSqlite("Data Source=eventsourcing.db");
     }
     else if (connectionString.Contains("Server=") || connectionString.Contains("Data Source=") && connectionString.Contains("Initial Catalog"))
     {
-        // Èç¹ûÊÇSQL ServerÁ¬½Ó×Ö·û´®£¬Ê¹ÓÃSQL Server
+        // å¦‚æœæ˜¯SQL Serverè¿æ¥å­—ç¬¦ä¸²ï¼Œä½¿ç”¨SQL Server
         options.UseSqlServer(connectionString);
     }
     else
     {
-        // ·ñÔò¼ÙÉèÊÇSQLite
+        // å¦åˆ™å‡è®¾æ˜¯SQLite
         options.UseSqlite(connectionString);
     }
 });
 
-// ×¢²á´æ´¢½Ó¿ÚÊµÏÖ
+// æ³¨å†Œå­˜å‚¨æ¥å£å®ç°
 builder.Services.AddScoped<IEventStore, EventStore>();
 builder.Services.AddScoped<ISnapshotStore, SnapshotStore>();
 builder.Services.AddScoped<IAggregateStore, AggregateStore>();
 
-// ×¢²á¿ìÕÕ²ßÂÔ£¬Ä¬ÈÏÊ¹ÓÃÊÂ¼ş¼ÆÊı²ßÂÔ£¬Ã¿10¸öÊÂ¼ş´´½¨Ò»¸ö¿ìÕÕ
+// æ³¨å†Œå¿«ç…§ç­–ç•¥ï¼Œé»˜è®¤ä½¿ç”¨äº‹ä»¶è®¡æ•°ç­–ç•¥ï¼Œæ¯10ä¸ªäº‹ä»¶åˆ›å»ºä¸€ä¸ªå¿«ç…§
 builder.Services.AddScoped<ISnapshotStrategy>(provider => new EventCountSnapshotStrategy(10));
 
-// ×¢²áÃüÁî´¦ÀíÆ÷
+// æ³¨å†Œå‘½ä»¤å¤„ç†å™¨
 builder.Services.AddScoped<ICommandHandler<CreateAccount>, CreateAccountHandler>();
 builder.Services.AddScoped<ICommandHandler<DepositMoney>, DepositMoneyHandler>();
 builder.Services.AddScoped<ICommandHandler<WithdrawMoney>, WithdrawMoneyHandler>();
 
-// ×¢²á²éÑ¯´¦ÀíÆ÷
+// æ³¨å†ŒæŸ¥è¯¢å¤„ç†å™¨
 builder.Services.AddScoped<IQueryHandler<GetAccountBalance, AccountBalanceResult>, GetAccountBalanceHandler>();
 builder.Services.AddScoped<IQueryHandler<GetAccountStateAtTime, AccountStateResult>, GetAccountStateAtTimeHandler>();
 
-// ×¢²áÊÂ¼ş´¦ÀíÆ÷
+// æ³¨å†Œäº‹ä»¶å¤„ç†å™¨
 builder.Services.AddScoped<IEventHandler<AccountCreated>, AccountCreatedHandler>();
 builder.Services.AddScoped<IEventHandler<MoneyDeposited>, MoneyDepositedHandler>();
 builder.Services.AddScoped<IEventHandler<MoneyWithdrawn>, MoneyWithdrawnHandler>();
 
-// ÅäÖÃÈÕÖ¾ÏµÍ³
+// é…ç½®æ—¥å¿—ç³»ç»Ÿ
 builder.Services.AddLogging();
 
 var app = builder.Build();
@@ -74,18 +74,18 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-// È·±£Êı¾İ¿âÒÑ´´½¨
+// ç¡®ä¿æ•°æ®åº“å·²åˆ›å»º
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<EventSourcingDbContext>();
     try
     {
         context.Database.EnsureCreated();
-        app.Logger.LogInformation("Êı¾İ¿â³õÊ¼»¯³É¹¦");
+        app.Logger.LogInformation("æ•°æ®åº“åˆå§‹åŒ–æˆåŠŸ");
     }
     catch (Exception ex)
     {
-        app.Logger.LogError(ex, "Êı¾İ¿â³õÊ¼»¯Ê§°Ü");
+        app.Logger.LogError(ex, "æ•°æ®åº“åˆå§‹åŒ–å¤±è´¥");
         throw;
     }
 }

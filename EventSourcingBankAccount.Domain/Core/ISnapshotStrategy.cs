@@ -1,4 +1,4 @@
-namespace EventSourcingBankAccount.Domain.Core;
+﻿namespace EventSourcingBankAccount.Domain.Core;
 
 /// <summary>
 /// 快照策略接口

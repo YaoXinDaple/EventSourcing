@@ -1,11 +1,11 @@
-using EventSourcingBankAccount.Domain.Events;
+ï»¿using EventSourcingBankAccount.Domain.Events;
 using EventSourcingBankAccount.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace EventSourcingBankAccount.Infrastructure.Handlers;
 
 /// <summary>
-/// ÕË»§´´½¨ÊÂ¼ş´¦ÀíÆ÷
+/// è´¦æˆ·åˆ›å»ºäº‹ä»¶å¤„ç†å™¨
 /// </summary>
 public class AccountCreatedHandler : IEventHandler<AccountCreated>
 {
@@ -18,20 +18,20 @@ public class AccountCreatedHandler : IEventHandler<AccountCreated>
 
     public async Task HandleAsync(AccountCreated @event)
     {
-        // ÕâÀï¿ÉÒÔÊµÏÖÊÂ¼şµÄ¸±×÷ÓÃ´¦Àí£¬±ÈÈç£º
-        // 1. ¸üĞÂ¶ÁÈ¡Ä£ĞÍ
-        // 2. ·¢ËÍÍ¨Öª
-        // 3. ¼¯³ÉÆäËûÏµÍ³
-        _logger.LogInformation("ÕË»§ÒÑ´´½¨: {AccountId}, ³ÖÓĞÈË: {AccountHolder}, ³õÊ¼Óà¶î: {InitialBalance}", 
+        // è¿™é‡Œå¯ä»¥å®ç°äº‹ä»¶çš„å‰¯ä½œç”¨å¤„ç†ï¼Œæ¯”å¦‚ï¼š
+        // 1. æ›´æ–°è¯»å–æ¨¡å‹
+        // 2. å‘é€é€šçŸ¥
+        // 3. é›†æˆå…¶ä»–ç³»ç»Ÿ
+        _logger.LogInformation("è´¦æˆ·å·²åˆ›å»º: {AccountId}, æŒæœ‰äºº: {AccountHolder}, åˆå§‹ä½™é¢: {InitialBalance}", 
             @event.AccountId, @event.AccountHolder, @event.InitialBalance);
 
-        // Ä£ÄâÒì²½´¦Àí
+        // æ¨¡æ‹Ÿå¼‚æ­¥å¤„ç†
         await Task.CompletedTask;
     }
 }
 
 /// <summary>
-/// ´æ¿îÍê³ÉÊÂ¼ş´¦ÀíÆ÷
+/// å­˜æ¬¾å®Œæˆäº‹ä»¶å¤„ç†å™¨
 /// </summary>
 public class MoneyDepositedHandler : IEventHandler<MoneyDeposited>
 {
@@ -44,20 +44,20 @@ public class MoneyDepositedHandler : IEventHandler<MoneyDeposited>
 
     public async Task HandleAsync(MoneyDeposited @event)
     {
-        // ÕâÀï¿ÉÒÔÊµÏÖÊÂ¼şµÄ¸±×÷ÓÃ´¦Àí£¬±ÈÈç£º
-        // 1. ¸üĞÂÕË»§Óà¶îµÄ¶ÁÈ¡Ä£ĞÍ
-        // 2. ·¢ËÍ´æ¿î³É¹¦Í¨Öª
-        // 3. ¸üĞÂÍ³¼ÆÊı¾İ
-        _logger.LogInformation("´æ¿îÍê³É: ÕË»§ {AccountId}, ½ğ¶î: {Amount}, ĞÂÓà¶î: {NewBalance}", 
+        // è¿™é‡Œå¯ä»¥å®ç°äº‹ä»¶çš„å‰¯ä½œç”¨å¤„ç†ï¼Œæ¯”å¦‚ï¼š
+        // 1. æ›´æ–°è´¦æˆ·ä½™é¢çš„è¯»å–æ¨¡å‹
+        // 2. å‘é€å­˜æ¬¾æˆåŠŸé€šçŸ¥
+        // 3. æ›´æ–°ç»Ÿè®¡æ•°æ®
+        _logger.LogInformation("å­˜æ¬¾å®Œæˆ: è´¦æˆ· {AccountId}, é‡‘é¢: {Amount}, æ–°ä½™é¢: {NewBalance}", 
             @event.AccountId, @event.Amount, @event.NewBalance);
 
-        // Ä£ÄâÒì²½´¦Àí
+        // æ¨¡æ‹Ÿå¼‚æ­¥å¤„ç†
         await Task.CompletedTask;
     }
 }
 
 /// <summary>
-/// È¡¿îÍê³ÉÊÂ¼ş´¦ÀíÆ÷
+/// å–æ¬¾å®Œæˆäº‹ä»¶å¤„ç†å™¨
 /// </summary>
 public class MoneyWithdrawnHandler : IEventHandler<MoneyWithdrawn>
 {
@@ -70,14 +70,14 @@ public class MoneyWithdrawnHandler : IEventHandler<MoneyWithdrawn>
 
     public async Task HandleAsync(MoneyWithdrawn @event)
     {
-        // ÕâÀï¿ÉÒÔÊµÏÖÊÂ¼şµÄ¸±×÷ÓÃ´¦Àí£¬±ÈÈç£º
-        // 1. ¸üĞÂÕË»§Óà¶îµÄ¶ÁÈ¡Ä£ĞÍ
-        // 2. ·¢ËÍÈ¡¿î³É¹¦Í¨Öª
-        // 3. ¼ì²éÓà¶îÔ¤¾¯
-        _logger.LogInformation("È¡¿îÍê³É: ÕË»§ {AccountId}, ½ğ¶î: {Amount}, ĞÂÓà¶î: {NewBalance}", 
+        // è¿™é‡Œå¯ä»¥å®ç°äº‹ä»¶çš„å‰¯ä½œç”¨å¤„ç†ï¼Œæ¯”å¦‚ï¼š
+        // 1. æ›´æ–°è´¦æˆ·ä½™é¢çš„è¯»å–æ¨¡å‹
+        // 2. å‘é€å–æ¬¾æˆåŠŸé€šçŸ¥
+        // 3. æ£€æŸ¥ä½™é¢é¢„è­¦
+        _logger.LogInformation("å–æ¬¾å®Œæˆ: è´¦æˆ· {AccountId}, é‡‘é¢: {Amount}, æ–°ä½™é¢: {NewBalance}", 
             @event.AccountId, @event.Amount, @event.NewBalance);
 
-        // Ä£ÄâÒì²½´¦Àí
+        // æ¨¡æ‹Ÿå¼‚æ­¥å¤„ç†
         await Task.CompletedTask;
     }
 }

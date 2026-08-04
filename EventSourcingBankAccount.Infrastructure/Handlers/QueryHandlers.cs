@@ -1,11 +1,11 @@
-using EventSourcingBankAccount.Domain.Queries;
+ï»¿using EventSourcingBankAccount.Domain.Queries;
 using EventSourcingBankAccount.Domain.Interfaces;
 using EventSourcingBankAccount.Domain.Aggregates;
 
 namespace EventSourcingBankAccount.Infrastructure.Handlers;
 
 /// <summary>
-/// ÕË»§Óà¶î²éÑ¯½á¹û
+/// è´¦æˆ·ä½™é¢æŸ¥è¯¢ç»“æœ
 /// </summary>
 public class AccountBalanceResult
 {
@@ -18,7 +18,7 @@ public class AccountBalanceResult
 }
 
 /// <summary>
-/// ÕË»§ÀúÊ·×´Ì¬²éÑ¯½á¹û
+/// è´¦æˆ·å†å²çŠ¶æ€æŸ¥è¯¢ç»“æœ
 /// </summary>
 public class AccountStateResult
 {
@@ -32,7 +32,7 @@ public class AccountStateResult
 }
 
 /// <summary>
-/// »ñÈ¡ÕË»§Óà¶î²éÑ¯´¦ÀíÆ÷
+/// è·å–è´¦æˆ·ä½™é¢æŸ¥è¯¢å¤„ç†å™¨
 /// </summary>
 public class GetAccountBalanceHandler : IQueryHandler<GetAccountBalance, AccountBalanceResult>
 {
@@ -49,7 +49,7 @@ public class GetAccountBalanceHandler : IQueryHandler<GetAccountBalance, Account
         
         if (account == null)
         {
-            throw new InvalidOperationException($"ÕË»§ {query.AccountId} ²»´æÔÚ");
+            throw new InvalidOperationException($"è´¦æˆ· {query.AccountId} ä¸å­˜åœ¨");
         }
 
         return new AccountBalanceResult
@@ -65,7 +65,7 @@ public class GetAccountBalanceHandler : IQueryHandler<GetAccountBalance, Account
 }
 
 /// <summary>
-/// »ñÈ¡ÕË»§ÀúÊ·×´Ì¬²éÑ¯´¦ÀíÆ÷
+/// è·å–è´¦æˆ·å†å²çŠ¶æ€æŸ¥è¯¢å¤„ç†å™¨
 /// </summary>
 public class GetAccountStateAtTimeHandler : IQueryHandler<GetAccountStateAtTime, AccountStateResult>
 {
@@ -82,7 +82,7 @@ public class GetAccountStateAtTimeHandler : IQueryHandler<GetAccountStateAtTime,
         
         if (account == null)
         {
-            throw new InvalidOperationException($"ÕË»§ {query.AccountId} ÔÚ {query.PointInTime:yyyy-MM-dd HH:mm:ss} Ê±²»´æÔÚ»òÉĞÎ´´´½¨");
+            throw new InvalidOperationException($"è´¦æˆ· {query.AccountId} åœ¨ {query.PointInTime:yyyy-MM-dd HH:mm:ss} æ—¶ä¸å­˜åœ¨æˆ–å°šæœªåˆ›å»º");
         }
 
         return new AccountStateResult
