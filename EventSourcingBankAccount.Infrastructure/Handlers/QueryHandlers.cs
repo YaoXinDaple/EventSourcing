@@ -12,8 +12,8 @@ public class AccountBalanceResult
     public string AccountId { get; set; } = string.Empty;
     public decimal Balance { get; set; }
     public string AccountHolder { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    public DateTime LastModifiedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset LastModifiedAt { get; set; }
     public int Version { get; set; }
 }
 
@@ -25,9 +25,9 @@ public class AccountStateResult
     public string AccountId { get; set; } = string.Empty;
     public decimal Balance { get; set; }
     public string AccountHolder { get; set; } = string.Empty;
-    public DateTime StateAtTime { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime LastModifiedAt { get; set; }
+    public DateTimeOffset StateAtTime { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset LastModifiedAt { get; set; }
     public int Version { get; set; }
 }
 
@@ -57,10 +57,15 @@ public class GetAccountBalanceHandler : IQueryHandler<GetAccountBalance, Account
             AccountId = account.Id,
             Balance = account.Balance,
             AccountHolder = account.AccountHolder,
-            CreatedAt = account.CreatedAt,
-            LastModifiedAt = account.LastModifiedAt,
+            CreatedAt = ToUtcDateTimeOffset(account.CreatedAt),
+            LastModifiedAt = ToUtcDateTimeOffset(account.LastModifiedAt),
             Version = account.Version
         };
+    }
+
+    private static DateTimeOffset ToUtcDateTimeOffset(DateTime value)
+    {
+        return new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Utc));
     }
 }
 
@@ -90,10 +95,15 @@ public class GetAccountStateAtTimeHandler : IQueryHandler<GetAccountStateAtTime,
             AccountId = account.Id,
             Balance = account.Balance,
             AccountHolder = account.AccountHolder,
-            StateAtTime = query.PointInTime,
-            CreatedAt = account.CreatedAt,
-            LastModifiedAt = account.LastModifiedAt,
+            StateAtTime = ToUtcDateTimeOffset(query.PointInTime),
+            CreatedAt = ToUtcDateTimeOffset(account.CreatedAt),
+            LastModifiedAt = ToUtcDateTimeOffset(account.LastModifiedAt),
             Version = account.Version
         };
+    }
+
+    private static DateTimeOffset ToUtcDateTimeOffset(DateTime value)
+    {
+        return new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Utc));
     }
 }

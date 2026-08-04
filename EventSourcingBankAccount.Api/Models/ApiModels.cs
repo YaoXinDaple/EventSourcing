@@ -33,7 +33,7 @@ public class WithdrawRequest
 /// </summary>
 public class GetStateAtTimeRequest
 {
-    public DateTime PointInTime { get; set; }
+    public DateTimeOffset PointInTime { get; set; }
 }
 
 /// <summary>

@@ -67,10 +67,15 @@ public class BankAccountController : ControllerBase
 
             return Ok(ApiResponse<object>.Ok(new { AccountId = request.AccountId }, "账户创建成功"));
         }
-        catch (InvalidOperationException ex) when (ex.Message.Contains("已存在"))
+        catch (AccountAlreadyExistsException ex)
         {
-            _logger.LogWarning("尝试创建已存在的账户: {AccountId}", request.AccountId);
+            _logger.LogWarning(ex, "尝试创建已存在的账户: {AccountId}", request.AccountId);
             return Conflict(ApiResponse<object>.Error(ex.Message));
+        }
+        catch (ConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "创建账户并发冲突: {AccountId}", request.AccountId);
+            return Conflict(ApiResponse<object>.Error("账户数据发生并发冲突，请刷新后重试"));
         }
         catch (Exception ex)
         {
@@ -103,6 +108,11 @@ public class BankAccountController : ControllerBase
         {
             _logger.LogWarning(ex, "存款操作失败: 账户 {AccountId}", accountId);
             return BadRequest(ApiResponse<object>.Error(ex.Message));
+        }
+        catch (ConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "存款并发冲突: 账户 {AccountId}", accountId);
+            return Conflict(ApiResponse<object>.Error("账户数据发生并发冲突，请刷新后重试"));
         }
         catch (Exception ex)
         {
@@ -141,6 +151,11 @@ public class BankAccountController : ControllerBase
             _logger.LogWarning(ex, "取款操作失败: 账户 {AccountId}", accountId);
             return BadRequest(ApiResponse<object>.Error(ex.Message));
         }
+        catch (ConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "取款并发冲突: 账户 {AccountId}", accountId);
+            return Conflict(ApiResponse<object>.Error("账户数据发生并发冲突，请刷新后重试"));
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "取款时发生错误: 账户 {AccountId}", accountId);
@@ -176,10 +191,17 @@ public class BankAccountController : ControllerBase
     /// <summary>
     /// 回溯账户状态到指定时间点
     /// </summary>
+    /// <param name="accountId">账户ID。</param>
+    /// <param name="pointInTime">
+    /// 回溯时间点。建议传入带明确时区偏移的 ISO 8601 时间，例如 2026-08-04T10:00:00+08:00 或
+    /// 2026-08-04T02:00:00Z；两者表示同一瞬间。服务端会统一转换为 UTC 后查询。
+    /// 如果传入不带偏移的时间（例如 2026-08-04T10:00:00），将保留 ASP.NET Core 的默认绑定语义，
+    /// 按服务器本地时区解释后再转换为 UTC。
+    /// </param>
     [HttpGet("{accountId}/state")]
     public async Task<ActionResult<ApiResponse<AccountStateResult>>> GetStateAtTime(
         string accountId, 
-        [FromQuery] DateTime pointInTime)
+        [FromQuery] DateTimeOffset pointInTime)
     {
         try
         {
@@ -188,7 +210,8 @@ public class BankAccountController : ControllerBase
                 return BadRequest(ApiResponse<AccountStateResult>.Error("必须指定时间点"));
             }
 
-            var query = new GetAccountStateAtTime(accountId, pointInTime);
+            var utcPointInTime = pointInTime.UtcDateTime;
+            var query = new GetAccountStateAtTime(accountId, utcPointInTime);
             var result = await _stateQueryHandler.HandleAsync(query);
 
             return Ok(ApiResponse<AccountStateResult>.Ok(result, "状态回溯成功"));

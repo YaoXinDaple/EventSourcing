@@ -1,8 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using EventSourcingBankAccount.Infrastructure.Data;
 
 namespace EventSourcingBankAccount.Infrastructure.Configurations;
+
+internal static class UtcDateTimeConverter
+{
+    public static readonly ValueConverter<DateTime, DateTime> Instance = new(
+        value => DateTime.SpecifyKind(value, DateTimeKind.Utc),
+        value => DateTime.SpecifyKind(value, DateTimeKind.Utc));
+}
 
 /// <summary>
 /// 事件存储实体配置
@@ -33,6 +41,7 @@ public class EventStoreEntityConfiguration : IEntityTypeConfiguration<EventStore
             .HasComment("事件版本号");
             
         builder.Property(e => e.Timestamp)
+            .HasConversion(UtcDateTimeConverter.Instance)
             .IsRequired()
             .HasComment("事件时间戳");
         
@@ -78,6 +87,7 @@ public class SnapshotEntityConfiguration : IEntityTypeConfiguration<SnapshotEnti
             .HasComment("快照版本号");
             
         builder.Property(s => s.Timestamp)
+            .HasConversion(UtcDateTimeConverter.Instance)
             .IsRequired()
             .HasComment("快照时间戳");
         
